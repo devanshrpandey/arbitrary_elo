@@ -1,6 +1,7 @@
 #from flask import Flask
 import random
 from pynput.keyboard import Key, Listener
+import itertools
 
 #app = Flask(__name__)
 # we want to take an arbitrary list, make a number of comparisons until we get bored, then sort the final thing by elo
@@ -20,6 +21,19 @@ def on_press(key):
         return False
     except AttributeError:
         pass #stop the listener
+
+def sample_pairs(lst, num_comparisons):
+    # Generate all unique pairs from the list
+    all_pairs = list(itertools.combinations(lst, 2))
+    
+    # Shuffle the pairs to ensure randomness
+    random.shuffle(all_pairs)
+    
+    # Return the first X pairs
+    if num_comparisons > len(all_pairs):
+        return all_pairs
+    else:
+        return all_pairs[:num_comparisons]
 
 
 
@@ -46,11 +60,11 @@ def main(list_of_items, num_comparisons,k=100):
     # all elos should be 1k originally
     elos = {x: 1000 for x in list_of_items}
 
-    for _ in range (num_comparisons):
-        
-        a, b = random.sample(list_of_items, 2)
-        # if we've already compared these two, skip
-        
+    # get a list of pairs
+    pairs = sample_pairs(list_of_items, num_comparisons)
+
+    for pair in pairs:
+        a, b = pair
 
         left_key_pressed,right_key_pressed = False,False
         print(f"Which is better? {a} or {b}. \n\n {a} <----, ----> {b}")
@@ -62,18 +76,13 @@ def main(list_of_items, num_comparisons,k=100):
 
         compare_and_update(a,b,winner,elos,k)
 
-        print(elos)
-
 
 # decide on a method to get the original list
-taylor_swift_albums = ["Taylor Swift", "Fearless (not TV)", "Speak Now (not TV)", "Red", "1989", "Reputation", "Lover", "Folklore", "Evermore", "Midnights", "Red (TV)"]
+taylor_swift_albums = ["Taylor Swift", "Fearless (not TV)", "Speak Now (not TV)", "Red (not TV)", "1989", "Reputation", "Lover", "Folklore", "Evermore", "Midnights", "Red (TV)"]
  # we need to set a k value that determines how much elo is gained/lost per comparison
 # changing this makes it more or less volatile
 k = 200
 
-num_comparisons = 50
-
-main(taylor_swift_albums,num_comparisons,k)
-
+num_comparisons = 100
 
 

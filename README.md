@@ -1,0 +1,1 @@
+Have you ever wanted to take an arbitrary list of things and rank them using only 1-1 comparisons? Now you can!
