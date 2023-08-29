@@ -1,9 +1,9 @@
-#from flask import Flask
+
 import random
 from pynput.keyboard import Key, Listener
 import itertools
 
-#app = Flask(__name__)
+
 # we want to take an arbitrary list, make a number of comparisons until we get bored, then sort the final thing by elo
 
 # create a listener to check if the left or right arrow keys are pressed
@@ -58,6 +58,7 @@ def compare_and_update(a, b, winner, elos, k):
 
 def main(list_of_items, num_comparisons,k=100):
     # all elos should be 1k originally
+    return "<p>hello world</p>"
     elos = {x: 1000 for x in list_of_items}
 
     # get a list of pairs
@@ -76,6 +77,12 @@ def main(list_of_items, num_comparisons,k=100):
 
         compare_and_update(a,b,winner,elos,k)
 
+    # sort the list by elo
+    sorted_list = sorted(elos.items(), key=lambda x: x[1], reverse=True)
+
+    final_list = [x[0] for x in sorted_list]
+    return final_list
+
 
 # decide on a method to get the original list
 taylor_swift_albums = ["Taylor Swift", "Fearless (not TV)", "Speak Now (not TV)", "Red (not TV)", "1989", "Reputation", "Lover", "Folklore", "Evermore", "Midnights", "Red (TV)"]
@@ -83,6 +90,6 @@ taylor_swift_albums = ["Taylor Swift", "Fearless (not TV)", "Speak Now (not TV)"
 # changing this makes it more or less volatile
 k = 200
 
-num_comparisons = 100
+num_comparisons = 10
 
-
+print(main(taylor_swift_albums, num_comparisons, k))
